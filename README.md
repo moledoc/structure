@@ -95,6 +95,10 @@ GOOS=windows GOARCH=amd64 go build -o seek.exe seek.go
 | structure.go
 ```
 
+## Notes
+
+* in vim/ directory I have provided the initial vimscript function, key remapping and commands related to seek that I use in my `.vimrc`.
+
 ## Author
 
 Meelis Utt
