@@ -2,6 +2,23 @@
 
 Program that prints the structure of current working directory, written in Go.
 
+## Quick start
+
+* Use build binaries from bin/ (seek.exe for windows, seek for linux).
+* Build it yourself:
+  * **Dependency**: need to have Go installed
+  * go build -o seek seek.go
+  * **[optional]** install the binary to local user with
+  ```sh
+  go install .
+  ```
+
+To build binary (64-bit) from linux to windows, run
+
+```console
+GOOS=windows GOARCH=amd64 go build -o seek.exe seek.go
+```
+
 ## Usage
 
 **structure [FLAGS]**
