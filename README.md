@@ -1,51 +1,70 @@
 # structure
 
-Program that prints the structure of current working directory written in Go.
+Program that prints the structure of current working directory, written in Go.
 
 ## Usage
 
-**structure [ SUBCOMMAND | FLAG ]**
+**structure [FLAGS]**
 
-### SUBCOMMAND
+### FLAGS
 
-**help**
+**-help**
 
     Print this help.
 
-### FLAG
-**-ignore string**
+**-ignore**=PATTERN
 
-    File, where each line represents one directory or file that is ignored. If when .adoignore exist in the current directory, this flag is not necessary. (default ".adoignore")
+    REGEXP_PATTERN that we want to ignore. (default "\\.git")
 
-**-depth int**
+**-depth**=int
 
     The depth of directory structure recursion, -1 is exhaustive recursion. (default -1)
+
+**-tree**
+
+    Format the directory structure in a tree format.
 
 
 ## Examples
 
 * Print help for program `structure`
     ```sh
-    structure help
+    structure --help
     ```
 * Print current working directory structure to stdout
     ```sh
     structure
     ```
-* Print current working directory structure to stdout, ignoring directories and files specified in \<ignore> file.
+* Print current working directory structure to stdout, ignoring directories and files specified in pattern \<ignore>.
     ```sh
     structure -ignore <ignore>
     structure -ignore=<ignore>
     structure --ignore <ignore>
     structure --ignore=<ignore>
     ```
-- Print current working directory structure to stdout, until subdirectory depth is 2 (including).
+* Print current working directory structure to stdout, until subdirectory depth is 2 (including).
     ```sh
     structure -depth=2
     structure --depth=2
     ```
+* Print the current working directory structure in a tree format
+    ```sh
+    structure --tree
+    ```
 
 ### Example output
+
+```
+/path/to/directory
+/path/to/directory/.ignore
+/path/to/directory/README.md
+/path/to/directory/bin
+/path/to/directory/bin/structure
+/path/to/directory/bin/structure.exe
+/path/to/directory/go.mod
+/path/to/directory/go.sum
+/path/to/directory/structure.go
+```
 
 ```
 /path/to/directory:
@@ -61,5 +80,4 @@ Program that prints the structure of current working directory written in Go.
 
 ## Author
 
-Written by
 Meelis Utt

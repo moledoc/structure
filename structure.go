@@ -6,20 +6,18 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"gitlab.com/utt_meelis/walks"
 )
 
-// help prints info about the usage of this program
-func help() {
-	fmt.Println("structure [ SUBCOMMAND | FLAG ]")
-	fmt.Println("SUBCOMMAND")
-	fmt.Printf("  help\n")
-	fmt.Printf("  \tPrint this help.\n")
-	fmt.Println("FLAG")
-	flag.PrintDefaults()
-}
+// root is a variable to hold current working directory path.
+// It is used so that we could access the root (starting directory) from our printer function without passing it as an argument.
+var root string
+
+// treeFormat is a boolean value to identify if we want to print directory structure in a tree format or not.
+var treeFormat bool
 
 // printer prints given path with defined format
 func printer(path string) {
@@ -33,25 +31,37 @@ func printer(path string) {
 		}
 	}
 	printed += string(pathLoc[id+1:])
-	fmt.Println(printed)
+	if treeFormat {
+		fmt.Println(printed)
+		return
+	}
+	fmt.Println(path)
 }
 
-var root string
+// help is a function to print program help.
+func help() {
+	fmt.Println("USAGE\n\tstructure [FLAGS]")
+	fmt.Println("DESCRIPTION\n\tProgram that prints the structure of current working directory, written in Go.")
+	fmt.Println("FLAGS")
+	flag.PrintDefaults()
+	os.Exit(0)
+}
 
 func main() {
 
-	ignoreLoc := flag.String("ignore", ".ignore", "File, where each line represents one directory or file that is ignored. If when .ignore exist in the current directory, this flag is not necessary.")
+	ignore := flag.String("ignore", "\\.git", "REGEXP_PATTERN that we want to ignore.")
 	depth := flag.Int("depth", -1, "The depth of directory structure recursion, -1 is exhaustive recursion.")
+	helpBool := flag.Bool("help", false, "Print this help.")
+	tree := flag.Bool("tree", false, "Format the directory structure in a tree format.")
 	flag.Parse()
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	for _, arg := range os.Args {
-		if strings.Contains(arg, "help") {
-			help()
-			os.Exit(0)
-		}
+	if *helpBool {
+		help()
 	}
+
+	treeFormat = *tree
 
 	rootLoc, err := os.Getwd()
 	if err != nil {
@@ -61,9 +71,14 @@ func main() {
 	root = rootLoc
 
 	// set walks.Ignore
-	walks.SetIgnore(*ignoreLoc)
+	walks.Ignore = regexp.MustCompile(*ignore)
+	// 	walks.SetIgnore(*ignoreLoc)
 
-	fmt.Printf("%s:\n", rootLoc)
+	fmt.Printf("%s", rootLoc)
+	if *tree {
+		fmt.Print(":")
+	}
+	fmt.Print("\n")
 	// Walk current working directory recursively.
 	walks.WalkLinear(rootLoc, printer, printer, *depth, 0)
 }
