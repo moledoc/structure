@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"gitlab.com/utt_meelis/walks"
+	"github.com/moledoc/walks"
 )
 
 // root is a variable to hold current working directory path.
